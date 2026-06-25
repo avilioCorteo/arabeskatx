@@ -1,0 +1,134 @@
+.resv-wrapper {
+  position: fixed;
+  bottom: 2.5vh;
+  right: 1.5vw;
+  z-index: 300;
+}
+
+/* ── base button ── */
+.resv-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+
+  /* pill shape */
+  width: 196px;
+  height: 52px;
+  padding: 0 14px 0 12px;
+  border-radius: 26px;
+
+  background: #3d3a4e;
+  box-shadow: 0 4px 24px rgba(61, 58, 78, 0.38);
+
+  transition:
+    width         0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    padding       0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow    0.3s  ease;
+}
+
+/* gradient overlay on hover */
+.resv-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    82.3deg,
+    #C9892F 10.8%,
+    #b88640 94.3%
+  );
+  opacity: 0;
+  transition: opacity 0.38s ease;
+}
+.resv-btn:hover::before { opacity: 1; }
+.resv-btn:hover {
+  box-shadow: 0 6px 32px rgba(201, 137, 47, 0.5);
+}
+
+/* ── collapsed → circle ── */
+.resv-btn--collapsed {
+  width: 52px;
+  padding: 0;
+  border-radius: 50%;
+  gap: 0;
+}
+
+/* ── icon ── */
+.resv-icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.resv-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ── label ── */
+.resv-label {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 168px;
+  opacity: 1;
+  transition:
+    max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity   0.28s ease;
+}
+.resv-btn--collapsed .resv-label {
+  max-width: 0;
+  opacity: 0;
+}
+
+/* ── shimmer on hover ── */
+.resv-shine {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  transform: skewX(-15deg);
+  opacity: 0;
+  transition: none;
+}
+.resv-btn:hover .resv-shine {
+  animation: resv-shimmer 0.65s ease forwards;
+}
+
+@keyframes resv-shimmer {
+  from { left: -60%; opacity: 1; }
+  to   { left: 120%;  opacity: 1; }
+}
+
+/* ── mobile ── */
+@media (max-width: 480px) {
+  .resv-wrapper {
+    bottom: 1.5vh;
+    right: 2vw;
+  }
+}

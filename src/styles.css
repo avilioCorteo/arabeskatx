@@ -1,0 +1,634 @@
+/* =====================================================
+   ARABESKA — Hookah Lounge · Plano, TX
+   Style ported from the "Haus of Boba" reference,
+   re-skinned to Arabeska's warm lounge palette.
+   ===================================================== */
+
+/* === 0. LOCAL FONTS === */
+@font-face {
+  font-family: 'Boska';
+  src: url('/fonts/Boska-Variable.woff2') format('woff2-variations'),
+       url('/fonts/Boska-Variable.woff') format('woff');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Boska';
+  src: url('/fonts/Boska-VariableItalic.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* === 1. TOKENS === */
+:root {
+  /* Warm lounge palette (accent replaces boba teal) */
+  --accent:        #C9892F;   /* amber / gold */
+  --accent-deep:   #7C2D2D;   /* ember / burgundy */
+  --accent-mid:    #D89A3E;
+  --accent-50:     rgba(201, 137, 47, 0.07);
+  --accent-10:     rgba(201, 137, 47, 0.12);
+
+  --cream:         #FDF8F0;
+  --cream-dark:    #F5ECD9;
+  --cream-deeper:  #EFE2C8;
+
+  --brown:         #5C3A2A;
+  --brown-light:   #8B5E4A;
+
+  --text-dark:     #1C1917;
+  --text-mid:      #4A3F3B;
+  --text-light:    #8A7B74;
+  --white:         #FFFFFF;
+
+  /* Type — Playfair Display for body/UI; Boska for the two hero display words only */
+  --font-body:     'Playfair Display', Georgia, serif;
+  --font-display:  'Boska', Georgia, serif;
+  --font-logo:     'Oswald', 'Arial Narrow', sans-serif;
+
+  /* Shared display word size — HOOKAH and SIGNATURE use the same scale */
+  --font-size-display: clamp(16.5vw, 19.25vw, 275px);
+
+  /* Spacing */
+  --nav-h:         76px;
+  --cw:            1320px;
+  --cpx:           48px;
+
+  /* Radii */
+  --r-sm:   10px;
+  --r-md:   18px;
+  --r-lg:   28px;
+  --r-xl:   40px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --sh-card:  0 2px 8px rgba(28,25,23,0.06), 0 12px 40px rgba(28,25,23,0.08);
+  --sh-hover: 0 4px 16px rgba(28,25,23,0.08), 0 24px 64px rgba(28,25,23,0.14);
+  --sh-nav:   0 2px 24px rgba(28,25,23,0.1);
+
+  /* Motion */
+  --expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur1: 0.2s;
+  --dur2: 0.4s;
+  --dur3: 0.7s;
+}
+
+
+/* === 2. RESET & BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--cream);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+a { text-decoration: none; color: inherit; }
+button { font: inherit; }
+ul { list-style: none; }
+
+
+/* === 3. NAVIGATION === */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: var(--nav-h);
+  background: rgba(253, 248, 240, 0.96);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  transition: box-shadow var(--dur2) var(--expo);
+}
+.site-nav.scrolled { box-shadow: var(--sh-nav); }
+
+.nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+  padding: 0 var(--cpx);
+  max-width: var(--cw);
+  margin: 0 auto;
+}
+
+/* Script logo wordmark */
+.nav-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+  text-decoration: none;
+}
+.logo-script {
+  font-family: var(--font-script);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--text-dark);
+  line-height: 1;
+}
+.logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-top: -2px;
+}
+
+/* Right side: MENU label + hamburger */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.menu-text-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+}
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5.5px;
+  width: 40px; height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.hamburger span {
+  display: block;
+  width: 20px; height: 1.5px;
+  background: var(--text-dark);
+  border-radius: 2px;
+  transition: transform var(--dur2) var(--expo), opacity var(--dur2) var(--expo);
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+
+/* === 4. MOBILE MENU OVERLAY === */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(253, 248, 240, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur2) var(--expo);
+}
+.mobile-menu.open { opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  font-family: var(--font-body);
+  font-size: clamp(2.2rem, 8vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-dark);
+  padding: 8px 28px;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--dur3) var(--expo), transform var(--dur3) var(--expo), color var(--dur1);
+}
+.mobile-menu.open a { opacity: 1; transform: translateY(0); }
+.mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+.mobile-menu.open a:nth-child(2) { transition-delay: 0.10s; }
+.mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
+.mobile-menu.open a:nth-child(4) { transition-delay: 0.20s; }
+.mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
+.mobile-menu.open a:nth-child(6) { transition-delay: 0.30s; }
+.mobile-menu.open a:nth-child(7) { transition-delay: 0.35s; }
+.mobile-menu a:hover { color: var(--accent); }
+.mobile-menu-footer {
+  position: absolute;
+  bottom: 40px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  opacity: 0;
+  transition: opacity var(--dur3) var(--expo) 0.3s;
+}
+.mobile-menu.open .mobile-menu-footer { opacity: 1; }
+
+
+/* === 4b. HERO CENTERED LOGO === */
+.hero-logo-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 14px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  gap: 4px;
+  position: relative;
+  z-index: 250;
+}
+.hero-logo-center .logo-script {
+  font-family: var(--font-logo);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
+  color: var(--text-dark);
+  line-height: 1;
+}
+.hero-logo-center .logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+
+/* === 5. HERO === */
+.hero {
+  background: var(--cream);
+  padding-bottom: 0;
+  overflow: visible;
+  position: relative;
+  /* Contain horizontal overflow from shifted hero items so downstream
+     sections (signature, footer) remain truly page-centered. */
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* Shared display word styles — HOOKAH and SIGNATURE */
+.hero-brand-word,
+.fresh-word {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--font-size-display);
+  line-height: 0.88;
+  color: var(--accent);
+  text-align: center;
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.02em;
+}
+
+.hero-brand-word {
+  width: 100%;
+  padding-top: 8px;
+  display: block;
+}
+
+/* 3-product showcase — images aligned along their bottoms, overlapping the
+   lower ~25% of the HOOKAH word, sized to fit within the viewport. */
+.hero-showcase {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+  padding: 0 3% 0;
+  gap: clamp(20px, 3vw, 56px);
+  /* pull the row up so image tops tuck under the word; bottoms bleed off-screen */
+  margin-top: -20vw;
+  /* cap the on-screen band; the oversized images overflow past the bottom */
+  max-height: 78vh;
+}
+
+.hero-item {
+  flex: 1 1 0;
+  max-width: 33%;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;   /* align image tops → tucked under the word */
+  cursor: pointer;
+  position: relative;
+}
+
+/* Per-product vertical offsets — nudge each image down independently
+   (positive margin pushes that item down from the shared row top). */
+.hero-item:nth-child(1) { margin-top: 15.04vh; margin-left: -2.5%; }  /* hookah */
+.hero-item:nth-child(2) { margin-top: calc(41.6vh - 50px); margin-left: -4%; }  /* burger */
+.hero-item:nth-child(3) { margin-top: 15.4vh; margin-left: -5%; }  /* mojito */
+
+.hero-item-blob {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+}
+
+/* Product PNG heights — each product sized individually.
+   Base rule carries shared presentation; nth-child sets the height. */
+.hero-item-blob img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: top center;
+  filter: drop-shadow(18px 20px 40px rgba(0, 0, 0, 0.18));
+  transition: scale 600ms var(--bounce), filter 600ms var(--expo);
+}
+
+/* Individual product heights */
+.hero-item:nth-child(1) .hero-item-blob img { height: clamp(448px, 73.6vh, 1040px); }  /* hookah */
+.hero-item:nth-child(2) .hero-item-blob img { height: clamp(558px, 91.8vh, 1296px); }  /* burger */
+.hero-item:nth-child(3) .hero-item-blob img { height: clamp(409px, 67vh, 948px);    }  /* mojito */
+
+/* Hover: lift wrapper (image + label move together); image also scales */
+.hero-item:hover .hero-item-lift {
+  transform: translateY(-20px);
+  will-change: transform;
+}
+.hero-item:hover .hero-item-blob img {
+  scale: 1.04;
+  filter: drop-shadow(18px 28px 48px rgba(0, 0, 0, 0.26));
+}
+
+/* .hero-item-lift wraps image + tag so they animate as one unit */
+.hero-item-lift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 600ms var(--bounce);
+}
+
+/* Tag label — plain text directly below the image */
+.hero-item-tag {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 20px);
+  font-weight: 900;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Align all three tags to the same visual baseline.
+   FOOD is the reference (closest to the line); nudge hookah/mojito down to match. */
+.hero-item:nth-child(1) .hero-item-tag { margin-top: calc(14px - 4.8vh); width: 100%; text-align: center; margin-left: 11%; }
+.hero-item:nth-child(2) .hero-item-tag { margin-top: calc(14px - 42.94vh); margin-left: 0.5%; }
+.hero-item:nth-child(3) .hero-item-tag { margin-top: calc(14px + 1.06vh); margin-left: 1.5%; }
+
+/* === 6. SIGNATURE SECTION (bobatest "FRESH", renamed) === */
+.fresh-section {
+  background: var(--cream);
+  position: relative;
+  padding: 120px 0 88px;
+  overflow: visible;
+}
+
+.fresh-word {
+  margin-top: 50px;
+}
+
+.fresh-product {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -8vw;
+}
+
+.fresh-img-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: clamp(195px, 27.3vw, 390px);
+  margin-left: -4%;
+}
+.fresh-hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(12px 16px 32px rgba(0, 0, 0, 0.18));
+  transition: scale 600ms var(--bounce), filter 600ms var(--expo);
+}
+/* Wrap lifts image + label together on hover */
+.fresh-img-wrap {
+  transition: transform 600ms var(--bounce);
+  flex-direction: column;
+}
+.fresh-img-wrap:hover {
+  transform: translateY(-20px);
+  will-change: transform;
+}
+.fresh-img-wrap:hover .fresh-hero-img {
+  scale: 1.04;
+  filter: drop-shadow(18px 28px 48px rgba(0, 0, 0, 0.26));
+}
+
+.fresh-noor-jahan {
+  margin-left: calc(9.5% + 1.5vw);
+}
+
+.fresh-caption {
+  margin-top: 24px;
+  margin-left: calc(0% + 1.5vw);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-align: center;
+}
+
+
+/* === 7. MINIMAL FOOTER === */
+.site-footer-minimal {
+  background: var(--cream);
+  border-top: 1px solid rgba(92, 58, 42, 0.1);
+  padding: 56px var(--cpx) 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.footer-logo-minimal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
+}
+.footer-logo-minimal .logo-script { font-size: 3.4rem; }
+.footer-logo-minimal .logo-sub { margin-top: 0; }
+
+.footer-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+}
+.footer-nav-btn {
+  display: block;
+  padding: 12px 20px;
+  border: 1.5px solid rgba(92, 58, 42, 0.22);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-align: center;
+  background: transparent;
+  transition:
+    background   var(--dur1) var(--expo),
+    color        var(--dur1) var(--expo),
+    border-color var(--dur1) var(--expo);
+}
+.footer-nav-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.footer-socials-minimal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.footer-social-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(92, 58, 42, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition:
+    background   var(--dur1) var(--expo),
+    color        var(--dur1) var(--expo),
+    border-color var(--dur1) var(--expo);
+}
+.footer-social-icon svg { width: 18px; height: 18px; }
+.footer-social-icon:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.footer-info-minimal {
+  font-size: 11px;
+  color: var(--text-light);
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.footer-info-minimal p { margin: 0; }
+.footer-copy-minimal {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--text-light);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+
+/* === 8. SCROLL REVEAL === */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.85s var(--expo), transform 0.85s var(--expo);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.08s; }
+.reveal-d2 { transition-delay: 0.16s; }
+.reveal-d3 { transition-delay: 0.24s; }
+
+
+/* === 9. RESPONSIVE === */
+@media (max-width: 1100px) {
+  :root { --cpx: 36px; }
+}
+
+@media (max-width: 960px) {
+  .hero-brand-word,
+  .fresh-word { font-size: clamp(12.1vw, 14.3vw, 242px); }
+}
+
+@media (max-width: 768px) {
+  :root { --cpx: 20px; --nav-h: 64px; }
+
+  /* Stack the three images vertically */
+  .hero-showcase {
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 0 var(--cpx) 32px;
+    margin-top: -8vw;
+    height: auto;
+  }
+  .hero-item,
+  .hero-item.blob-specialty-col {
+    flex: none;
+    width: 80%;
+    max-width: 340px;
+    justify-content: flex-start;
+  }
+  /* Reset per-product offsets and size images by column width when stacked */
+  .hero-showcase > .hero-item { margin-top: 0; }
+  .hero-item-blob img,
+  .hero-item.blob-specialty-col .hero-item-blob img {
+    width: 100%;
+    height: auto;
+    object-position: center;
+  }
+  .hero-item-tag { font-size: 11px; }
+
+  .hero-brand-word,
+  .fresh-word { font-size: clamp(13.2vw, 15.4vw, 165px); }
+
+  .fresh-product { margin-top: -6vw; }
+  .fresh-img-wrap { width: clamp(180px, 60vw, 300px); }
+}
+
+@media (max-width: 480px) {
+  .hero-item,
+  .hero-item.blob-specialty-col { width: 86%; max-width: 260px; }
+  .footer-nav-grid { max-width: 280px; }
+  .footer-logo-minimal .logo-script { font-size: 2.8rem; }
+}

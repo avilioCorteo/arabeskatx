@@ -9,8 +9,12 @@ const NAV_ITEMS = [
 export default function Header({ menuOpen, setMenuOpen, scrolled }) {
   return (
     <>
-      <nav className={`site-nav ${scrolled ? 'scrolled' : ''}`} id="siteNav">
+      {/* Nav bar — slides in after scroll, contains logo + hamburger */}
+      <nav className={`site-nav${scrolled ? ' scrolled' : ' nav-hidden'}`} id="siteNav">
         <div className="nav-inner">
+          <a href="#home" className="nav-logo-img" aria-label="Arabeska home">
+            <img src="/images/ak-logo.png" alt="Arabeska logo" />
+          </a>
           <div className="nav-right">
             <span className="menu-text-label" aria-hidden="true">MENU</span>
             <button
@@ -26,6 +30,28 @@ export default function Header({ menuOpen, setMenuOpen, scrolled }) {
           </div>
         </div>
       </nav>
+
+      {/* Logo + hamburger — always fixed at top when nav bar is hidden */}
+      {!scrolled && (
+        <>
+          <a href="#home" className="nav-logo-fixed" aria-label="Arabeska home">
+            <img src="/images/ak-logo.png" alt="Arabeska logo" />
+          </a>
+          <div className="nav-hamburger-fixed">
+            <span className="menu-text-label" aria-hidden="true">MENU</span>
+            <button
+              className={`hamburger ${menuOpen ? 'open' : ''}`}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </>
+      )}
 
 
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>

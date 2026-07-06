@@ -19,10 +19,15 @@ export default defineConfig({
   },
   server: {
     watch: {
-      // Loose image files dropped in the project root (screenshots, source
-      // cutouts, the reference PNG) aren't app sources — ignoring them keeps
-      // the file watcher from crashing on EBUSY when one is mid-write/locked.
-      ignored: ['**/*.png', '**/_research/**', '**/dist/**'],
+      // Loose media files dropped in the project root (screenshots, screen
+      // recordings, source cutouts, the reference PNG) aren't app sources —
+      // ignoring them keeps the file watcher from crashing on EBUSY when one
+      // is mid-write/locked (e.g. an in-progress screen recording).
+      ignored: [
+        '**/*.png', '**/*.jpg', '**/*.jpeg',
+        '**/*.mp4', '**/*.mov', '**/*.webm',
+        '**/_research/**', '**/dist/**',
+      ],
     },
   },
 })

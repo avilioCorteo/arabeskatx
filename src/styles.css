@@ -30,16 +30,20 @@
   --accent-50:     rgba(201, 137, 47, 0.07);
   --accent-10:     rgba(201, 137, 47, 0.12);
 
-  --cream:         #FDF8F0;
-  --cream-dark:    #F5ECD9;
-  --cream-deeper:  #EFE2C8;
+  /* Dark theme — page surface is black, gold display text */
+  --gold-display:  #FFFFFF;   /* HOOKAH / SIGNATURE / ARABESKA wordmark */
+
+  --cream:         #000000;   /* page surface (now black) */
+  --cream-dark:    #0A0A0A;
+  --cream-deeper:  #141414;
+  --nav-bg:        rgba(0, 0, 0, 0.82);
 
   --brown:         #5C3A2A;
   --brown-light:   #8B5E4A;
 
-  --text-dark:     #1C1917;
-  --text-mid:      #4A3F3B;
-  --text-light:    #8A7B74;
+  --text-dark:     #F4F1EA;   /* primary text (light on dark) */
+  --text-mid:      #C9C2B6;   /* secondary text */
+  --text-light:    #8F8779;   /* muted text */
   --white:         #FFFFFF;
 
   /* Type — Playfair Display for body/UI; Boska for the two hero display words only */
@@ -100,22 +104,44 @@ ul { list-style: none; }
   top: 0; left: 0; right: 0;
   z-index: 200;
   height: var(--nav-h);
-  background: rgba(253, 248, 240, 0.96);
+  background: var(--nav-bg);
   backdrop-filter: blur(16px) saturate(1.5);
   -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  transition: box-shadow var(--dur2) var(--expo);
+  opacity: 1;
+  transform: translateY(0);
+  transition: box-shadow var(--dur2) var(--expo),
+              opacity 0.35s ease,
+              transform 0.35s ease;
 }
 .site-nav.scrolled { box-shadow: var(--sh-nav); }
+.site-nav.nav-hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
 
 .nav-inner {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 24px;
   padding: 0 var(--cpx);
   max-width: var(--cw);
   margin: 0 auto;
+}
+
+/* AK monogram logo in nav */
+.nav-logo-img {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-logo-img img {
+  height: 44px;
+  width: auto;
+  display: block;
 }
 
 /* Script logo wordmark */
@@ -139,8 +165,39 @@ ul { list-style: none; }
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--text-light);
+  color: #C99339;
   margin-top: -2px;
+}
+
+/* Always-visible hamburger — floats above everything, independent of nav bar */
+.nav-hamburger-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  padding: 0 var(--cpx);
+  gap: 10px;
+}
+
+/* Always-visible logo — floats top-left until the nav bar takes over */
+.nav-logo-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  padding: 0 var(--cpx);
+  text-decoration: none;
+}
+.nav-logo-fixed img {
+  height: 44px;
+  width: auto;
+  display: block;
 }
 
 /* Right side: MENU label + hamburger */
@@ -189,7 +246,7 @@ ul { list-style: none; }
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(253, 248, 240, 0.97);
+  background: rgba(0, 0, 0, 0.94);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   display: flex;
@@ -255,7 +312,7 @@ ul { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: clamp(2rem, 4.4vw, 3.6rem);
-  color: var(--text-dark);
+  color: #C99339;
   line-height: 1;
 }
 .hero-logo-center .logo-sub {
@@ -264,7 +321,7 @@ ul { list-style: none; }
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--text-light);
+  color: #C99339;
   margin-top: 2px;
 }
 
@@ -272,6 +329,7 @@ ul { list-style: none; }
 /* === 5. HERO === */
 .hero {
   background: var(--cream);
+  padding-top: clamp(72px, 9vw, 100px);
   padding-bottom: 0;
   overflow: visible;
   position: relative;
@@ -288,7 +346,7 @@ ul { list-style: none; }
   font-weight: 900;
   font-size: var(--font-size-display);
   line-height: 0.88;
-  color: var(--accent);
+  color: var(--gold-display);
   text-align: center;
   position: relative;
   z-index: 0;
@@ -394,7 +452,7 @@ ul { list-style: none; }
   font-weight: 900;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #C99339;
   white-space: nowrap;
 }
 
@@ -475,7 +533,7 @@ ul { list-style: none; }
 /* === 7. MINIMAL FOOTER === */
 .site-footer-minimal {
   background: var(--cream);
-  border-top: 1px solid rgba(92, 58, 42, 0.1);
+  border-top: 1px solid rgba(201, 147, 57, 0.16);
   padding: 56px var(--cpx) 44px;
   display: flex;
   flex-direction: column;
@@ -492,7 +550,7 @@ ul { list-style: none; }
   color: inherit;
   line-height: 1;
 }
-.footer-logo-minimal .logo-script { font-size: 3.4rem; }
+.footer-logo-minimal .logo-script { font-size: 3.4rem; color: #C99339; }
 .footer-logo-minimal .logo-sub { margin-top: 0; }
 
 .footer-nav-grid {
@@ -505,7 +563,7 @@ ul { list-style: none; }
 .footer-nav-btn {
   display: block;
   padding: 12px 20px;
-  border: 1.5px solid rgba(92, 58, 42, 0.22);
+  border: 1.5px solid rgba(201, 147, 57, 0.28);
   border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 10px;
@@ -534,7 +592,7 @@ ul { list-style: none; }
 .footer-social-icon {
   width: 40px; height: 40px;
   border-radius: 50%;
-  border: 1.5px solid rgba(92, 58, 42, 0.2);
+  border: 1.5px solid rgba(201, 147, 57, 0.26);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -553,6 +611,7 @@ ul { list-style: none; }
 }
 
 .footer-info-minimal {
+  font-family: var(--font-logo);
   font-size: 11px;
   color: var(--text-light);
   line-height: 1.8;
@@ -560,7 +619,7 @@ ul { list-style: none; }
 }
 .footer-info-minimal p { margin: 0; }
 .footer-copy-minimal {
-  font-family: var(--font-body);
+  font-family: var(--font-logo);
   font-size: 10px;
   color: var(--text-light);
   letter-spacing: 0.08em;
@@ -593,37 +652,60 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   :root { --cpx: 20px; --nav-h: 64px; }
 
-  /* Stack the three images vertically */
+  .hero { padding-top: 48px; }
+
+  /* Stack the three images vertically, each in its own predictable box.
+     No negative pulls — sections must not overlap on a narrow screen. */
   .hero-showcase {
     flex-direction: column;
     align-items: center;
-    gap: 36px;
-    padding: 0 var(--cpx) 32px;
-    margin-top: -8vw;
+    gap: 28px;
+    padding: 0 var(--cpx) 40px;
+    margin-top: 28px;
     height: auto;
+    max-height: none;
   }
   .hero-item,
   .hero-item.blob-specialty-col {
     flex: none;
-    width: 80%;
-    max-width: 340px;
+    width: 100%;
+    max-width: 320px;
     justify-content: flex-start;
   }
-  /* Reset per-product offsets and size images by column width when stacked */
-  .hero-showcase > .hero-item { margin-top: 0; }
+  /* Reset per-product vertical offsets when stacked */
+  .hero-showcase > .hero-item { margin-top: 0; margin-left: 0; }
+  /* Height-cap the images so tall/narrow PNGs can't bleed into other
+     sections; width follows aspect ratio and stays centered. */
+  .hero-item-blob { align-items: center; }
   .hero-item-blob img,
   .hero-item.blob-specialty-col .hero-item-blob img {
-    width: 100%;
+    width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: 300px;
     object-position: center;
+  }
+  /* Reset desktop per-product tag offsets so each tag sits under its image */
+  .hero-item:nth-child(1) .hero-item-tag,
+  .hero-item:nth-child(2) .hero-item-tag,
+  .hero-item:nth-child(3) .hero-item-tag {
+    margin-top: 14px;
+    margin-left: 0;
+    width: auto;
   }
   .hero-item-tag { font-size: 11px; }
 
   .hero-brand-word,
   .fresh-word { font-size: clamp(13.2vw, 15.4vw, 165px); }
 
-  .fresh-product { margin-top: -6vw; }
-  .fresh-img-wrap { width: clamp(180px, 60vw, 300px); }
+  /* SIGNATURE section: no negative pull (would ride up into the hero),
+     and reset desktop horizontal offsets so the block centers. */
+  .fresh-section { padding: 48px 0 72px; }
+  .fresh-word { margin-top: 0; }
+  .fresh-product { margin-top: 16px; }
+  .fresh-img-wrap { width: clamp(180px, 60vw, 280px); margin-left: 0; }
+  .fresh-noor-jahan { margin-left: 0; }
+  .fresh-caption { margin-left: 0; }
 }
 
 @media (max-width: 480px) {

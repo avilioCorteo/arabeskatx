@@ -15,7 +15,7 @@
   overflow: hidden;
   border: none;
   cursor: pointer;
-  color: #fff;
+  color: #000000;
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 800;
@@ -30,8 +30,8 @@
   padding: 0 14px 0 12px;
   border-radius: 26px;
 
-  background: #3d3a4e;
-  box-shadow: 0 4px 24px rgba(61, 58, 78, 0.38);
+  background: #EFE8DC;
+  box-shadow: 0 4px 24px rgba(239, 232, 220, 0.38);
 
   transition:
     width         0.52s cubic-bezier(0.16, 1, 0.3, 1),

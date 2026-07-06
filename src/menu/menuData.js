@@ -32,13 +32,15 @@ export const hookahMenu = withIds({
   title: 'Hookah',
   file: '/hookah-menu.html',
   image: '/images/hookah.png',
-  tagline: 'Premium flavored hookah, freshly packed',
+  eyebrow: 'Premium Experience',
+  tagline: 'Finest tobaccos, perfectly blended to deliver rich flavor and smooth clouds.',
+  flavorsLabel: 'Our Flavors',
   sections: [
     {
       name: 'House-Mixes',
       note: '$29',
       items: [
-        { name: 'Maddie', price: '$29', desc: 'A signature Arabeska house blend, layered and smooth.' },
+        { name: 'Maddie', price: '$29', desc: 'A signature Arabeska house blend, layered and smooth.', popular: true },
         { name: "Magician's Paan", price: '$29', desc: 'Sweet paan-inspired house mix with a cooling finish.' },
         { name: 'Paan Dews', price: '$29', desc: 'Paan and melon-dew notes blended for a refreshing draw.' },
         { name: 'Dragon Heart', price: '$29', desc: 'Bold fruit-forward house blend with a warm core.' },
@@ -50,7 +52,7 @@ export const hookahMenu = withIds({
       name: 'Premium House Mixes',
       note: '$35',
       items: [
-        { name: 'Al Pacino', price: '$35', desc: 'Rich premium blend with deep, layered character.' },
+        { name: 'Al Pacino', price: '$35', desc: 'Rich premium blend with deep, layered character.', popular: true },
         { name: 'Jet Fuel Hookah', price: '$35', desc: 'High-octane premium mix with an intense finish.' },
         { name: 'Rings Of Fire', price: '$35', desc: 'Spiced-sweet premium blend with a fiery edge.' },
         { name: 'Black Ice', price: '$35', desc: 'Dark fruit and frost — cool, smooth, premium.' },
@@ -60,7 +62,7 @@ export const hookahMenu = withIds({
       name: 'Traditional Swag',
       note: '2 flavors · $25',
       items: [
-        { name: 'Al Fakher', price: '$25', desc: 'Classic hookah blend offering a smooth, balanced draw.' },
+        { name: 'Al Fakher', price: '$25', desc: 'Classic hookah blend offering a smooth, balanced draw.', popular: true },
         { name: 'Mango', price: '$25', desc: 'Sweet, juicy mango with a clean tropical finish.' },
         { name: 'Watermelon', price: '$25', desc: 'Fresh watermelon, light and refreshing.' },
         { name: 'Peach', price: '$25', desc: 'Soft, ripe peach with a mellow sweetness.' },
@@ -102,7 +104,7 @@ export const hookahMenu = withIds({
         { name: 'Sky Fall', price: '$29', desc: 'Cool mixed-fruit Adalya signature.' },
         { name: 'Madagascar', price: '$29', desc: 'Exotic tropical Adalya blend.' },
         { name: 'Blue Dragon', price: '$29', desc: 'Blueberry-forward with a fruity edge.' },
-        { name: 'Love 66', price: '$29', desc: 'Fan-favorite fruity Adalya mix.' },
+        { name: 'Love 66', price: '$29', desc: 'Fan-favorite fruity Adalya mix.', popular: true },
         { name: 'Lady Killer', price: '$29', desc: 'Bold, sweet, layered Adalya blend.' },
       ],
     },
@@ -122,7 +124,9 @@ export const foodMenu = withIds({
   title: 'Food',
   file: '/food-menu.html',
   image: '/images/burger.png',
-  tagline: 'Smash burgers & signature bites',
+  eyebrow: 'Kitchen Favorites',
+  tagline: 'Smash burgers, shawarma & signature bites, made fresh to order.',
+  flavorsLabel: 'Our Kitchen',
   sections: [
     {
       name: 'Appetizers',
@@ -131,7 +135,7 @@ export const foodMenu = withIds({
         { name: 'Chicken Tenders', price: '$9', desc: 'Juicy strips of chicken breast, lightly coated and fried for a crispy, tender bite.' },
         { name: 'Hummus', price: '$7', desc: 'Creamy chickpea purée blended with tahini, garlic, lemon juice, and olive oil for a smooth, rich flavor.' },
         { name: 'Falafel', price: '$7', desc: 'Golden fried chickpea patties blended with fresh herbs and spices for a crisp, savory bite.' },
-        { name: 'Chicken Wings (6 Pcs)', price: '$14', desc: 'Crispy fried wings tossed in your choice of signature sauce, served hot and flavorful.' },
+        { name: 'Chicken Wings (6 Pcs)', price: '$14', desc: 'Crispy fried wings tossed in your choice of signature sauce, served hot and flavorful.', popular: true },
         { name: 'Egg Roll (4 Pcs)', price: '$7', desc: 'Crispy, golden spring rolls filled with egg and vegetables, served fresh and flavorful.' },
         { name: 'Veg Samosas', price: '$4', desc: 'Crisp pastry pockets filled with spiced potatoes and peas, served warm with a flavorful finish.' },
       ],
@@ -139,7 +143,7 @@ export const foodMenu = withIds({
     {
       name: 'Wraps & Sandwiches',
       items: [
-        { name: 'Chicken Shawarma', price: '$12', desc: 'Marinated chicken roasted to tenderness, served with fresh vegetables and house garlic sauce.' },
+        { name: 'Chicken Shawarma', price: '$12', desc: 'Marinated chicken roasted to tenderness, served with fresh vegetables and house garlic sauce.', popular: true },
         { name: 'Beef Shawarma', price: '$14', desc: 'Marinated beef slices slow-roasted to tenderness, served with fresh vegetables and house garlic sauce.' },
         { name: 'Falafel Wrap', price: '$11', desc: 'Crispy falafel wrapped with fresh vegetables and house tahini sauce in warm pita.' },
         { name: 'Gyro Wrap', price: '$14', desc: 'Seasoned meat wrapped with fresh vegetables and house-made sauce in warm pita.' },
@@ -162,7 +166,7 @@ export const foodMenu = withIds({
       items: [
         { name: 'Cheeseburger', price: '$15', desc: 'Grilled beef patty topped with melted cheese, served with fresh lettuce, tomato, and house sauce.' },
         { name: 'Zinger Burger', price: '$14', desc: 'Crispy, seasoned chicken fillet layered with fresh lettuce and house sauce on a toasted bun.' },
-        { name: 'Smash Burger', price: '$16', desc: 'Fresh beef patty smashed and seared for a crisp edge, topped with cheese and house sauce.' },
+        { name: 'Smash Burger', price: '$16', desc: 'Fresh beef patty smashed and seared for a crisp edge, topped with cheese and house sauce.', popular: true },
       ],
     },
     {
@@ -188,12 +192,14 @@ export const drinksMenu = withIds({
   title: 'Drinks',
   file: '/drinks-menu.html',
   image: '/images/mojito.png',
-  tagline: 'Fresh-made mojitos & mocktails',
+  eyebrow: 'Handcrafted & Chilled',
+  tagline: 'Fresh-made mojitos, lassis & mocktails, served ice-cold.',
+  flavorsLabel: 'Our Drinks',
   sections: [
     {
       name: 'Mojitos',
       items: [
-        { name: 'Virgin Mojito', price: '$8', desc: 'Fresh mint and lemon muddled with sparkling soda, served chilled for a crisp, cool, and refreshing experience.' },
+        { name: 'Virgin Mojito', price: '$8', desc: 'Fresh mint and lemon muddled with sparkling soda, served chilled for a crisp, cool, and refreshing experience.', popular: true },
         { name: 'Guava Mojito', price: '$8', desc: 'Fresh guava muddled with mint and lemon, served chilled for a smooth, tropical, and refreshing drink.' },
         { name: 'Strawberry Mojito', price: '$8', desc: 'Fresh strawberries muddled with mint and lemon, served chilled for a light and refreshing beverage.' },
         { name: 'Mango Mojito', price: '$8', desc: 'Fresh mango blended with mint and citrus, served chilled for a smooth, tropical refreshment.' },
@@ -214,7 +220,7 @@ export const drinksMenu = withIds({
         { name: 'Nutella Milkshake', price: '$9', desc: 'Creamy Nutella blended with milk and ice cream, served chilled for a rich, smooth, chocolate-hazelnut treat.' },
         { name: 'Chocolate Milkshake', price: '$9', desc: 'Rich chocolate blended with creamy milk and ice cream, served chilled for a thick, smooth indulgence.' },
         { name: 'Sweet Lassi', price: '$8', desc: 'Creamy yogurt blended with sugar and a hint of cardamom, served chilled for a smooth refreshment.' },
-        { name: 'Mango Lassi', price: '$9', desc: 'Smooth yogurt blended with sweet mango for a rich, creamy, and refreshing drink.' },
+        { name: 'Mango Lassi', price: '$9', desc: 'Smooth yogurt blended with sweet mango for a rich, creamy, and refreshing drink.', popular: true },
         { name: 'Piña Colada', price: '$10', desc: 'A smooth blend of pineapple and coconut, served chilled for a creamy, tropical refreshment.' },
         { name: 'Strawberry Milkshake', price: '$9', desc: 'Creamy blend of fresh strawberries and milk, served chilled for a smooth and refreshing treat.' },
         { name: 'Mint Lemonade', price: '$7', desc: 'Fresh mint blended with zesty lemon for a cool, refreshing drink.' },

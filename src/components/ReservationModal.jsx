@@ -144,6 +144,7 @@ export default function ReservationModal({ open, onClose }) {
 
   function handleConfirm() {
     if (!sd || !ss) return
+    window.scrollTo(0, 0)
     setConfirmed(true)
   }
 
@@ -256,8 +257,7 @@ export default function ReservationModal({ open, onClose }) {
                 <span className="resv-party-count">{sp}</span>
                 <button
                   className="resv-party-btn"
-                  onClick={() => setSp(n => Math.min(20, n + 1))}
-                  disabled={sp >= 20}
+                  onClick={() => setSp(n => n + 1)}
                   aria-label="Increase party size"
                 >+</button>
                 <span className="resv-party-label">guest{sp !== 1 ? 's' : ''}</span>

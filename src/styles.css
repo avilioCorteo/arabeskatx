@@ -481,14 +481,16 @@ ul { list-style: none; }
   flex-direction: column;
   align-items: center;
   margin-top: -8vw;
+  margin-left: 1.5%;
 }
 
 .fresh-img-wrap {
   position: relative;
   display: flex;
   justify-content: center;
-  width: clamp(195px, 27.3vw, 390px);
-  margin-left: -4%;
+  width: clamp(236px, 33vw, 472px);
+  text-decoration: none;
+  cursor: pointer;
 }
 .fresh-hero-img {
   width: 100%;
@@ -514,12 +516,11 @@ ul { list-style: none; }
 }
 
 .fresh-noor-jahan {
-  margin-left: calc(9.5% + 1.5vw);
+  margin-left: 0;
 }
 
 .fresh-caption {
   margin-top: 24px;
-  margin-left: calc(0% + 1.5vw);
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
@@ -693,7 +694,7 @@ ul { list-style: none; }
     margin-left: 0;
     width: auto;
   }
-  .hero-item-tag { font-size: 11px; }
+  .hero-item-tag { font-size: 15.75px; letter-spacing: 0.24em; }
 
   .hero-brand-word,
   .fresh-word { font-size: clamp(13.2vw, 15.4vw, 165px); }
@@ -702,10 +703,20 @@ ul { list-style: none; }
      and reset desktop horizontal offsets so the block centers. */
   .fresh-section { padding: 48px 0 72px; }
   .fresh-word { margin-top: 0; }
-  .fresh-product { margin-top: 16px; }
+  .fresh-product { margin-top: 16px; margin-left: 0; }
   .fresh-img-wrap { width: clamp(180px, 60vw, 280px); margin-left: 0; }
   .fresh-noor-jahan { margin-left: 0; }
   .fresh-caption { margin-left: 0; }
+
+  /* The visible object inside each transparent PNG isn't centered on its
+     own canvas, so a mathematically-centered box still LOOKS off. Nudge each
+     image by its measured content offset so the object sits on the axis.
+     (Mobile only — desktop layout is untouched.) */
+  .hero-item:nth-child(1) .hero-item-blob img { transform: translateX(-6.8%); }  /* hookah: content sits left, nudged left */
+  .hero-item:nth-child(2) .hero-item-blob img { transform: translateX(2%); }     /* burger: nudged right */
+  .hero-item:nth-child(3) .hero-item-blob img { transform: translateX(-2%); }    /* mojito: nudged left */
+  .fresh-hero-img { transform: translateX(1.1%); }                             /* noor jahan: content sits right */
+  .fresh-img-wrap:hover .fresh-hero-img { transform: translateX(1.1%); }       /* keep correction through hover */
 }
 
 @media (max-width: 480px) {

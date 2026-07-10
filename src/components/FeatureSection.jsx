@@ -4,15 +4,19 @@ export default function FeatureSection() {
       <div className="fresh-word reveal" aria-hidden="true">SIGNATURE</div>
 
       <div className="fresh-product reveal reveal-d1">
-        <div className="fresh-img-wrap">
+        <a
+          className="fresh-img-wrap"
+          href="/item.html?menu=hookah&id=noor-jahan"
+          aria-label="Noor Jahan signature hookah — view details"
+        >
           <img
             className="fresh-hero-img"
-            src="/images/hookah.png"
+            src="/images/noor-jahan.png"
             alt="Noor Jahan signature hookah"
             loading="lazy"
           />
           <p className="hero-item-tag ember fresh-noor-jahan">NOOR JAHAN</p>
-        </div>
+        </a>
         <p className="fresh-caption">
           OUR SIGNATURE HOOKAH — CRAFTED TO PERFECTION
         </p>

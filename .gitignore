@@ -4,9 +4,10 @@ dist
 *.local
 _research
 
-# Root-level loose files (reference screenshots/videos)
+# Root-level loose files (reference screenshots/videos/source assets)
 /*.png
 /*.mp4
 /*.mov
 /*.jpg
 /*.jpeg
+/*.webp

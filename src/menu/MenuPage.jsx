@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { MENUS } from './menuData.js'
 
 /* Tab order across the top of every menu page. */
@@ -13,6 +13,14 @@ const SORTS = [
   { key: 'price-asc', label: 'Price · Low to High' },
   { key: 'price-desc', label: 'Price · High to Low' },
   { key: 'az', label: 'A → Z' },
+]
+
+const NAV_ITEMS = [
+  { label: 'Home', href: '/#home' },
+  { label: 'Menu', href: '/food-menu.html' },
+  { label: 'About Us', href: '/#about' },
+  { label: 'Contact Us', href: '/#contact' },
+  { label: 'Reservation', href: '/#reservation' },
 ]
 
 const priceNum = (p) => Number(String(p).replace(/[^0-9.]/g, '')) || 0
@@ -42,11 +50,66 @@ function buildList(data, sort) {
   return list
 }
 
-/* Two-letter monogram from the item name for the thumbnail tile. */
-function monogram(name) {
-  const words = name.replace(/[^a-zA-Z ]/g, '').trim().split(/\s+/)
-  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase()
-  return name.replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase()
+/* Custom-styled "Sort by" dropdown — a native <select> can't be themed
+   past its trigger on most platforms, so this renders the option list
+   itself to match the dark/gold menu theme. */
+function SortDropdown({ value, onChange }) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef(null)
+  const current = SORTS.find((s) => s.key === value) ?? SORTS[0]
+
+  useEffect(() => {
+    if (!open) return
+    const onDocDown = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false)
+    }
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onDocDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  return (
+    <div className="menu-sort" ref={rootRef}>
+      <span className="menu-sort-label">Sort by</span>
+      <button
+        type="button"
+        className={`menu-sort-trigger ${open ? 'open' : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {current.label}
+        <svg className="menu-sort-caret" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {open && (
+        <ul className="menu-sort-list" role="listbox">
+          {SORTS.map((s) => (
+            <li key={s.key} role="option" aria-selected={s.key === value}>
+              <button
+                type="button"
+                className={`menu-sort-option ${s.key === value ? 'selected' : ''}`}
+                onClick={() => {
+                  onChange(s.key)
+                  setOpen(false)
+                }}
+              >
+                {s.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
 }
 
 export default function MenuPage({ data }) {
@@ -82,6 +145,16 @@ export default function MenuPage({ data }) {
         </div>
       </header>
 
+      {/* ===== MOBILE MENU DROPDOWN ===== */}
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
+        {NAV_ITEMS.map((item) => (
+          <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
+            {item.label}
+          </a>
+        ))}
+        <span className="mobile-menu-footer">5420 14th St · Plano, TX · 469-497-0900</span>
+      </div>
+
       {/* ===== CATEGORY TABS ===== */}
       <nav className="menu-tabs" aria-label="Menu categories">
         {TABS.map((t) => (
@@ -113,14 +186,7 @@ export default function MenuPage({ data }) {
       <main className="menu-body">
         <div className="menu-list-head">
           <h2 className="menu-list-title">{data.flavorsLabel}</h2>
-          <label className="menu-sort">
-            <span className="menu-sort-label">Sort by</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              {SORTS.map((s) => (
-                <option key={s.key} value={s.key}>{s.label}</option>
-              ))}
-            </select>
-          </label>
+          <SortDropdown value={sort} onChange={setSort} />
         </div>
 
         <ul className="menu-items">
@@ -132,7 +198,7 @@ export default function MenuPage({ data }) {
                 aria-label={`${item.name} — view details`}
               >
                 <span className="menu-item-thumb" aria-hidden="true">
-                  <span className="menu-item-mono">{monogram(item.name)}</span>
+                  <img src={item.image} alt="" loading="lazy" />
                 </span>
 
                 <span className="menu-item-main">

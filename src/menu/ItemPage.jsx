@@ -14,9 +14,9 @@ export default function ItemPage() {
     return (
       <div className="item-page item-page--missing">
         <header className="menu-bar">
-          <a className="menu-bar-logo" href="/">
-            <span className="logo-script">Arabeska</span>
-            <span className="logo-sub">Hookah Lounge · Plano, TX</span>
+          <a className="menu-bar-logo" href="/" aria-label="Arabeska home">
+            <img src="/images/ak-logo.png" alt="" className="menu-bar-mark" />
+            <span className="menu-bar-word">ARABESKA</span>
           </a>
         </header>
         <main className="item-missing-body">
@@ -38,25 +38,39 @@ export default function ItemPage() {
   return (
     <div className="item-page">
       <header className="menu-bar">
-        <a className="menu-bar-logo" href="/">
-          <span className="logo-script">Arabeska</span>
-          <span className="logo-sub">Hookah Lounge · Plano, TX</span>
+        <a className="menu-bar-logo" href="/" aria-label="Arabeska home">
+          <img src="/images/ak-logo.png" alt="" className="menu-bar-mark" />
+          <span className="menu-bar-word">ARABESKA</span>
         </a>
-        <nav className="menu-bar-links" aria-label="Back to menu">
-          <a href={menu.file}>← {menu.title} Menu</a>
+        <nav className="menu-bar-right" aria-label="Back to menu">
+          <a className="menu-resv-pill menu-resv-pill--ghost" href={menu.file}>
+            ← {menu.title} Menu
+          </a>
         </nav>
       </header>
 
       <main className="item-main">
         <div className="item-media">
-          <img src={menu.image} alt={item.name} />
+          <img src={item.image} alt={item.name} />
         </div>
+
         <div className="item-info">
           <span className="item-eyebrow">{menu.title} · {item.section}</span>
           <h1 className="item-name">{item.name}</h1>
           <span className="item-price">{item.price}</span>
           <p className="item-desc">{item.desc}</p>
-          <a className="item-back" href={menu.file}>← Back to {menu.title} Menu</a>
+
+          {item.popular && <span className="item-badge">★ Guest Favorite</span>}
+
+          <a
+            className="item-cta"
+            href="/#reservation"
+          >
+            Reserve a Table
+          </a>
+          <a className="item-call" href="tel:4694970900">
+            or call to order · (469) 497-0900
+          </a>
         </div>
       </main>
     </div>

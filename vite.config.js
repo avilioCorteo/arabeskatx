@@ -14,6 +14,8 @@ export default defineConfig({
         food: resolve(__dirname, 'food-menu.html'),
         drinks: resolve(__dirname, 'drinks-menu.html'),
         item: resolve(__dirname, 'item.html'),
+        about: resolve(__dirname, 'about.html'),
+        contact: resolve(__dirname, 'contact.html'),
       },
     },
   },

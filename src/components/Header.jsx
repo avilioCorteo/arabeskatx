@@ -1,8 +1,8 @@
 const NAV_ITEMS = [
   { label: 'Home', href: '#home' },
   { label: 'Menu', href: '/food-menu.html', external: true },
-  { label: 'About Us', href: '#about' },
-  { label: 'Contact Us', href: '#contact' },
+  { label: 'About Us', href: '/about.html' },
+  { label: 'Contact Us', href: '/contact.html' },
   { label: 'Reservation', href: '#reservation' },
 ]
 

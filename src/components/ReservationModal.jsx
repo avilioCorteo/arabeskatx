@@ -54,6 +54,17 @@ function stepOf(sd, ss) {
   return 2
 }
 
+/* Single submit seam. Today it just resolves; later, point it at a Netlify
+   Function that emails/texts the guest their confirmation.
+   e.g.  await fetch('/.netlify/functions/reserve', {
+           method: 'POST', body: JSON.stringify(reservation)
+         }) */
+async function submitReservation(reservation) {
+  // eslint-disable-next-line no-console
+  console.log('[reservation] submit', reservation)
+  return Promise.resolve({ ok: true })
+}
+
 const CloseIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
     <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
@@ -82,12 +93,20 @@ export default function ReservationModal({ open, onClose }) {
   const [vm, setVm] = useState(today.getMonth())
   const [confirmed, setConfirmed] = useState(false)
 
+  // Guest contact details (all required to confirm)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [touched, setTouched] = useState(false)   // show validation only after a submit attempt
+  const [submitting, setSubmitting] = useState(false)
+
   const activeStep = stepOf(sd, ss)
 
   const reset = useCallback(() => {
     setSd(null); setSs(null); setSp(2); setSv('dinner')
     setVy(today.getFullYear()); setVm(today.getMonth())
     setConfirmed(false)
+    setName(''); setEmail(''); setPhone(''); setTouched(false); setSubmitting(false)
   }, [])
 
   const close = useCallback(() => { reset(); onClose() }, [reset, onClose])
@@ -142,10 +161,40 @@ export default function ReservationModal({ open, onClose }) {
     ? sd.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : null
 
-  function handleConfirm() {
-    if (!sd || !ss) return
-    window.scrollTo(0, 0)
-    setConfirmed(true)
+  // Field-level validity (used to show inline errors + gate the submit)
+  const nameOk = name.trim().length >= 2
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+  const phoneDigits = phone.replace(/\D/g, '')
+  const phoneOk = phoneDigits.length >= 10
+  const partyOk = Number.isFinite(sp) && sp >= 1
+  const canSubmit = sd && ss && nameOk && emailOk && phoneOk && partyOk
+
+  async function handleConfirm() {
+    setTouched(true)
+    if (!canSubmit) return
+
+    // Single payload — this is the one place a backend call will be wired in.
+    const reservation = {
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      partySize: sp,
+      date: sd.toISOString().slice(0, 10),
+      time: ss,
+      occasion: occasion?.name ?? '',
+    }
+
+    setSubmitting(true)
+    try {
+      // TODO(backend): POST `reservation` to a Netlify Function that emails
+      // the confirmation to the guest. Until that endpoint exists we resolve
+      // locally so the UX flow is complete.
+      await submitReservation(reservation)
+      window.scrollTo(0, 0)
+      setConfirmed(true)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const confirmMeta = sd && ss && occasion
@@ -153,6 +202,7 @@ export default function ReservationModal({ open, onClose }) {
     : ''
 
   return (
+    <>
     <div
       className="resv-modal"
       role="dialog"
@@ -254,10 +304,22 @@ export default function ReservationModal({ open, onClose }) {
                   disabled={sp <= 1}
                   aria-label="Decrease party size"
                 >−</button>
-                <span className="resv-party-count">{sp}</span>
+                <input
+                  className="resv-party-count"
+                  type="number"
+                  min="1"
+                  inputMode="numeric"
+                  value={sp}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    setSp(v === '' ? '' : Math.max(1, parseInt(v, 10) || 1))
+                  }}
+                  onBlur={() => { if (sp === '' || sp < 1) setSp(1) }}
+                  aria-label="Party size"
+                />
                 <button
                   className="resv-party-btn"
-                  onClick={() => setSp(n => n + 1)}
+                  onClick={() => setSp(n => (Number(n) || 0) + 1)}
                   aria-label="Increase party size"
                 >+</button>
                 <span className="resv-party-label">guest{sp !== 1 ? 's' : ''}</span>
@@ -305,36 +367,88 @@ export default function ReservationModal({ open, onClose }) {
                 ))}
               </div>
 
+              <div className="resv-div" />
+
+              <div className="resv-pl">Your Details</div>
+              <div className="resv-fields">
+                <label className="resv-field">
+                  <span className="resv-field-lb">Full Name <em>*</em></span>
+                  <input
+                    className={`resv-input${touched && !nameOk ? ' err' : ''}`}
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    placeholder="Your name"
+                    autoComplete="name"
+                    required
+                  />
+                  {touched && !nameOk && <span className="resv-field-err">Please enter your name</span>}
+                </label>
+
+                <label className="resv-field">
+                  <span className="resv-field-lb">Email <em>*</em></span>
+                  <input
+                    className={`resv-input${touched && !emailOk ? ' err' : ''}`}
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="you@email.com"
+                    autoComplete="email"
+                    required
+                  />
+                  {touched && !emailOk && <span className="resv-field-err">Enter a valid email</span>}
+                </label>
+
+                <label className="resv-field">
+                  <span className="resv-field-lb">Phone <em>*</em></span>
+                  <input
+                    className={`resv-input${touched && !phoneOk ? ' err' : ''}`}
+                    type="tel"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    placeholder="(469) 497-0900"
+                    autoComplete="tel"
+                    required
+                  />
+                  {touched && !phoneOk && <span className="resv-field-err">Enter a valid phone number</span>}
+                </label>
+              </div>
+
               <button
                 className="resv-cta"
                 onClick={handleConfirm}
-                disabled={!sd || !ss}
+                disabled={!canSubmit || submitting}
               >
-                Request Reservation <ArrowIcon />
+                {submitting ? 'Sending…' : <>Request Reservation <ArrowIcon /></>}
               </button>
-              <p className="resv-note">Reservations held for 15 min · Walk-ins always welcome</p>
+              <p className="resv-note">
+                <em className="resv-req-note">* required</em> · Confirmation sent to your email · Held 15 min · Walk-ins welcome
+              </p>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Confirmation overlay */}
-      {confirmed && (
-        <div className="resv-confirm-ov" role="dialog" aria-modal="true" aria-label="Reservation confirmed">
-          <div className="resv-ov-card">
-            <div className="resv-ov-chk"><CheckIcon /></div>
-            <h3>You're <em>reserved.</em></h3>
-            <div className="resv-ov-meta">
-              <strong>{confirmMeta}</strong><br/>
-              We'll see you soon. Check your inbox for a confirmation.
-            </div>
-            <div className="resv-ov-actions">
-              <button className="resv-btn-s" onClick={close}>Close</button>
-              <button className="resv-btn-g" onClick={close}>Done</button>
-            </div>
+    {/* Confirmation overlay — sibling of .resv-modal so it escapes the
+        modal's backdrop-filter containing block and stays viewport-fixed */}
+    {confirmed && (
+      <div className="resv-confirm-ov" role="dialog" aria-modal="true" aria-label="Reservation confirmed">
+        <div className="resv-ov-card">
+          <div className="resv-ov-chk"><CheckIcon /></div>
+          <h3>You're <em>reserved.</em></h3>
+          <div className="resv-ov-meta">
+            <strong>{confirmMeta}</strong><br/>
+            {name.trim() && <>Thanks, {name.trim().split(' ')[0]}. </>}
+            A confirmation is on its way to <strong>{email.trim()}</strong>.
+          </div>
+          <div className="resv-ov-actions">
+            <button className="resv-btn-s" onClick={close}>Close</button>
+            <button className="resv-btn-g" onClick={close}>Done</button>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+    </>
   )
 }

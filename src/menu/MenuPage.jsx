@@ -18,20 +18,19 @@ const SORTS = [
 const NAV_ITEMS = [
   { label: 'Home', href: '/#home' },
   { label: 'Menu', href: '/food-menu.html' },
-  { label: 'About Us', href: '/#about' },
-  { label: 'Contact Us', href: '/#contact' },
+  { label: 'About Us', href: '/about.html' },
+  { label: 'Contact Us', href: '/contact.html' },
   { label: 'Reservation', href: '/#reservation' },
 ]
 
 const priceNum = (p) => Number(String(p).replace(/[^0-9.]/g, '')) || 0
 
-/* Flatten a menu's sections into a single ordered list, then sort. */
-function buildList(data, sort) {
-  const flat = []
-  data.sections.forEach((section) => {
-    section.items.forEach((item) => flat.push({ ...item, sectionName: section.name }))
-  })
-  const list = [...flat]
+const slug = (s) =>
+  s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+
+/* Sort a single category's items in place (copy) by the active sort key. */
+function sortItems(items, sort) {
+  const list = [...items]
   switch (sort) {
     case 'price-asc':
       list.sort((a, b) => priceNum(a.price) - priceNum(b.price))
@@ -115,8 +114,31 @@ function SortDropdown({ value, onChange }) {
 export default function MenuPage({ data }) {
   const [sort, setSort] = useState('popular')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeCat, setActiveCat] = useState(data.sections[0]?.name ?? null)
 
-  const items = useMemo(() => buildList(data, sort), [data, sort])
+  const groups = useMemo(
+    () => data.sections.map((section) => ({ ...section, items: sortItems(section.items, sort) })),
+    [data, sort]
+  )
+
+  const groupRefs = useRef({})
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveCat(entry.target.dataset.section)
+        })
+      },
+      { rootMargin: '-140px 0px -70% 0px', threshold: 0 }
+    )
+    Object.values(groupRefs.current).forEach((el) => el && observer.observe(el))
+    return () => observer.disconnect()
+  }, [groups])
+
+  function jumpToCategory(name) {
+    const el = groupRefs.current[name]
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <div className="menu-page">
@@ -189,35 +211,71 @@ export default function MenuPage({ data }) {
           <SortDropdown value={sort} onChange={setSort} />
         </div>
 
-        <ul className="menu-items">
-          {items.map((item, i) => (
-            <li key={item.id}>
-              <a
-                className="menu-item"
-                href={`/item.html?menu=${data.key}&id=${item.id}`}
-                aria-label={`${item.name} — view details`}
-              >
-                <span className="menu-item-thumb" aria-hidden="true">
-                  <img src={item.image} alt="" loading="lazy" />
-                </span>
+        {data.key === 'hookah' && (
+          <p className="menu-notice">
+            <span className="menu-notice-icon" aria-hidden="true">!</span>
+            Certain flavors cannot be mixed with House-Mixes — ask your server before combining.
+          </p>
+        )}
 
-                <span className="menu-item-main">
-                  <span className="menu-item-index" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="menu-item-name">{item.name}</span>
-                  {item.desc && <span className="menu-item-desc">{item.desc}</span>}
-                  {item.popular && <span className="menu-item-pop">★ Popular</span>}
-                </span>
-
-                <span className="menu-item-aside">
-                  <span className="menu-item-price">{item.price}</span>
-                  <span className="menu-item-view" aria-hidden="true">View</span>
-                </span>
-              </a>
-            </li>
+        {/* Jump-to-category chips — lets users skip the scroll entirely */}
+        <nav className="menu-cat-nav" aria-label="Jump to category">
+          {groups.map((g) => (
+            <button
+              key={g.name}
+              type="button"
+              className={`menu-cat-chip ${activeCat === g.name ? 'active' : ''}`}
+              onClick={() => jumpToCategory(g.name)}
+            >
+              {g.name}
+            </button>
           ))}
-        </ul>
+        </nav>
+
+        {groups.map((section) => (
+          <section
+            key={section.name}
+            id={slug(section.name)}
+            className="menu-group"
+            data-section={section.name}
+            ref={(el) => { groupRefs.current[section.name] = el }}
+          >
+            <div className="menu-group-head">
+              <h3 className="menu-group-title">{section.name}</h3>
+              {section.note && <span className="menu-group-note">{section.note}</span>}
+            </div>
+
+            <ul className="menu-items">
+              {section.items.map((item, i) => (
+                <li key={item.id}>
+                  <a
+                    className="menu-item"
+                    href={`/item.html?menu=${data.key}&id=${item.id}`}
+                    aria-label={`${item.name} — view details`}
+                  >
+                    <span className="menu-item-thumb" aria-hidden="true">
+                      <img src={item.image} alt="" loading="lazy" />
+                    </span>
+
+                    <span className="menu-item-main">
+                      <span className="menu-item-index" aria-hidden="true">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="menu-item-name">{item.name}</span>
+                      {item.desc && <span className="menu-item-desc">{item.desc}</span>}
+                      {item.popular && <span className="menu-item-pop">★ Popular</span>}
+                    </span>
+
+                    <span className="menu-item-aside">
+                      <span className="menu-item-price">{item.price}</span>
+                      <span className="menu-item-view" aria-hidden="true">View</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
 
         {/* ===== STAFF CTA CARD ===== */}
         <aside className="menu-cta">

@@ -19,6 +19,16 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  /* Auto-open the reservation modal when linked here via #reservation
+     (e.g. "Reserve a Table" from a menu item page). There's no in-page
+     anchor to scroll to — the hash is just a signal to open the modal. */
+  useEffect(() => {
+    if (window.location.hash === '#reservation') {
+      setReservationOpen(true)
+      history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+  }, [])
+
   /* Lock body scroll while the mobile menu is open + close on Escape */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''

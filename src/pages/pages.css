@@ -1,0 +1,118 @@
+/* =====================================================
+   ARABESKA — About & Contact pages
+   Builds on tokens from src/styles.css and the .menu-bar /
+   .menu-hero / .menu-foot scaffolding from src/menu/menu.css
+   ===================================================== */
+
+.page-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px var(--cpx) 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* --- About: story column --- */
+.page-story { max-width: 640px; }
+.page-story-title {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #F4ECDD;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+}
+.page-story p {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  margin-bottom: 18px;
+}
+.page-pullquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #E7B864;
+  margin: 32px 0 8px;
+  line-height: 1.4;
+}
+
+.page-socials {
+  display: flex;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+/* --- Contact: info card grid --- */
+.page-contact-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  text-align: left;
+}
+.page-contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 147, 57, 0.18);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.page-contact-card.is-link:hover {
+  border-color: rgba(201, 147, 57, 0.45);
+  background: rgba(201, 147, 57, 0.06);
+  transform: translateY(-2px);
+}
+.page-contact-icon { font-size: 1.4rem; line-height: 1; }
+.page-contact-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #E7B864;
+  margin-top: 4px;
+}
+.page-contact-value {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #F4ECDD;
+  line-height: 1.5;
+}
+
+/* --- Shared CTA --- */
+.page-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 40px;
+  padding: 14px 34px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, #E7B864, #C9892F);
+  color: #1a1206;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 26px rgba(201, 137, 47, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.page-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(201, 137, 47, 0.45);
+}
+
+@media (max-width: 640px) {
+  .page-contact-grid { grid-template-columns: 1fr; }
+  .page-story-title { font-size: 1.7rem; }
+}

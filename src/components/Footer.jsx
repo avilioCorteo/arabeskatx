@@ -1,8 +1,8 @@
 const PILL_LINKS = [
   { label: 'Menu', href: '/food-menu.html', external: true },
-  { label: 'About', href: '#about' },
+  { label: 'About', href: '/about.html' },
   { label: 'Reservations', href: '#reservation' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact', href: '/contact.html' },
 ]
 
 export default function Footer() {
